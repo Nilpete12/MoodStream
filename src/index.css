@@ -1,0 +1,36 @@
+/* 1. Correctly import the Montserrat font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+
+/* 2. Import Tailwind v4 */
+@import "tailwindcss";
+
+/* 3. Define the custom theme for Tailwind v4 */
+@theme {
+  /* Colors - This creates classes like bg-vfxBlack and text-aiAccent */
+  --color-vfxBlack: #050505;
+  --color-vfxCharcoal: #111111;
+  --color-aiAccent: #3b82f6;
+
+  /* Fonts - This creates the font-cinematic class */
+  --font-cinematic: "Montserrat", sans-serif;
+}
+
+/* Base body styling for the dark theme */
+@layer base {
+  body {
+    background-color: var(--color-vfxBlack);
+    color: white;
+    font-family: var(--font-cinematic);
+  }
+}
+
+/* Add this to the bottom of index.css to hide scrollbars but keep functionality */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
