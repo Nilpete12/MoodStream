@@ -22,6 +22,7 @@ const Header = () => {
     { name: 'Movies', path: '/movies' },
     { name: 'TV Shows', path: '/tv-shows' },
     { name: 'Genres', path: '/genres' },
+    { name: 'Country', path: '/country'},
     { name: 'Watchlist', path: '/watchlist' },
   ];
 
@@ -47,7 +48,7 @@ const Header = () => {
         </Link>
 
         {/* DESKTOP NAVIGATION */}
-        <nav className="hidden md:flex ml-88 gap-7 ">
+        <nav className="hidden md:flex ml-65 gap-7 ">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             return (

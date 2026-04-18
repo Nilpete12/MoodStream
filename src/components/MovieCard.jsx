@@ -16,9 +16,9 @@ const MovieCard = ({ movie }) => {
     <motion.div
       whileHover={{ y: -10, scale: 1.02 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="relative group rounded-xl overflow-hidden cursor-pointer bg-vfxCharcoal border border-white/5 shadow-2xl"
+      className="relative group rounded overflow-hidden cursor-pointer bg-vfxCharcoal border border-white/5 shadow-2xl"
     >
-      <div className="aspect-2/3 w-full bg-black/50">
+      <div className="aspect-2/3 w-full bg-black/50 ">
         <img 
           src={posterUrl} 
           alt={displayTitle} 
