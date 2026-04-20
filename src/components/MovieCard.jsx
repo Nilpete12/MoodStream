@@ -42,6 +42,10 @@ const MovieCard = ({ movie }) => {
             <Star className="w-4 h-4 text-aiAccent fill-aiAccent" />
             <span>{movie.vote_average?.toFixed(1)}</span>
           </div>
+          {/* The Age Rating Badge */}
+            <span className="border border-white/40 text-gray-300 text-[10px] px-1.5 py-0.5 rounded-[3px] uppercase leading-none tracking-wider">
+              {movie.age_rating || 'PG-13'}
+            </span>
           {/* Grab just the year from the date string */}
           <span>{displayDate?.split('-')[0]}</span>
         </div>

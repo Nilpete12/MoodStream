@@ -7,19 +7,20 @@ const platforms = [
   { id: 'prime', name: 'Prime Video' },
   { id: 'disney', name: 'Disney+' },
   { id: 'max', name: 'HBO Max' },
-  { id: 'apple', name: 'Apple TV+' }
+  { id: 'apple', name: 'Apple TV+' },
+  { id: 'chrunchy', name: 'Crunchy roll' },
 ];
 
 const PlatformFilter = () => {
   const [activeId, setActiveId] = useState('all');
 
   return (
-    <div className="sticky top-20 z-40 w-full bg-vfxBlack/90 backdrop-blur-md border-y border-white/5 py-4 px-6 md:px-12">
+    <div className="sticky top-20 z-40 w-fit mx-auto bg-vfxBlack/70 backdrop-blur-lg border border-white/5 rounded-full px-4 py-2 items-center justify-center">
       {/* Note: The mt-[-50vh] pulls this bar UP so it sits right underneath 
         the MovieCurtain once the scroll animation finishes! 
       */}
       
-      <div className="max-w-350 mx-auto flex gap-2 overflow-x-auto no-scrollbar">
+      <div className="max-w-350 mx-auto flex overflow-x-auto no-scrollbar">
         {platforms.map((platform) => (
           <button
             key={platform.id}
@@ -30,14 +31,14 @@ const PlatformFilter = () => {
             {activeId === platform.id && (
               <motion.div
                 layoutId="activePlatform"
-                className="absolute inset-0 bg-aiAccent rounded-full"
+                className="absolute inset-0 bg-aiAccent rounded-full cursor-pointer"
                 initial={false}
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
             
             {/* The text */}
-            <span className={`relative z-10 ${activeId === platform.id ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
+            <span className={`relative z-10 cursor-pointer ${activeId === platform.id ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
               {platform.name}
             </span>
           </button>

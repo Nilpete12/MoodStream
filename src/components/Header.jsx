@@ -37,7 +37,7 @@ const Header = () => {
           : 'bg-transparent py-6'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-2 md:px-1 flex items-center justify-between">
         
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2 group">
@@ -48,7 +48,7 @@ const Header = () => {
         </Link>
 
         {/* DESKTOP NAVIGATION */}
-        <nav className="hidden md:flex ml-65 gap-7 ">
+        <nav className="hidden md:flex ml-75 gap-7 ">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             return (
@@ -68,7 +68,7 @@ const Header = () => {
         </nav>
 
         {/* PROFILE / SEARCH ICONS */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           <button className="text-gray-400 hover:text-white transition-colors">
             <Search className="w-5 h-5" />
           </button>

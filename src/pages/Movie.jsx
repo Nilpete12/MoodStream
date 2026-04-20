@@ -5,7 +5,7 @@ import MovieGrid from '../components/MovieGrid';
 
 const Movies = () => {
   return (
-    <div className="bg-vfxBlack min-h-screen text-white font-cinematic relative">
+    <div className="bg-vfxBlack min-h-screen text-white font-semibold relative">
       
       {/* 1. The Full-Screen Scroll Reveal */}
       <MovieCurtain />
