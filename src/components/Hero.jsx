@@ -34,7 +34,7 @@ const Hero = () => {
     const duplicatedItems = [...items, ...items];
 
     return (
-      <div className="flex flex-col gap-4 w-[140px] sm:w-[200px] md:w-[240px] overflow-hidden">
+      <div className="flex flex-col gap-4 w-35 sm:w-50 md:w-60 overflow-hidden">
         <motion.div
           animate={{
             // If reverse is true, scroll down. Otherwise, scroll up.
@@ -48,14 +48,14 @@ const Hero = () => {
           className="flex flex-col gap-4"
         >
           {duplicatedItems.map((movie, idx) => (
-            <div key={`${movie.id}-${idx}`} className="relative rounded-xl overflow-hidden aspect-[2/3] bg-vfxCharcoal border border-white/5">
+            <div key={`${movie.id}-${idx}`} className="relative rounded-xl overflow-hidden aspect-2/3 bg-vfxCharcoal border border-white/5">
               <img
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                 alt={movie.title || movie.name}
                 className="w-full h-full object-cover loading-lazy"
               />
               {/* Title overlay (appears on hover) */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
                 <span className="text-white text-sm font-bold leading-tight font-cinematic shadow-black drop-shadow-md">
                   {movie.title || movie.name}
                 </span>
@@ -75,17 +75,17 @@ const Hero = () => {
         {movies.length > 0 && (
           <>
             {/* the less the faster */}
-            <ScrollingColumn items={col1} speed={40} />
-            <ScrollingColumn items={col2} reverse={true} speed={30} />
-            <ScrollingColumn items={col3} speed={30} />
-            <ScrollingColumn items={col4} reverse={true} speed={35} />
-            <ScrollingColumn items={col5} speed={45} />
+            <ScrollingColumn items={col1} speed={38} />
+            <ScrollingColumn items={col2} speed={33} />
+            <ScrollingColumn items={col3} speed={29} />
+            <ScrollingColumn items={col4} speed={33} />
+            <ScrollingColumn items={col5} speed={38} />
           </>
         )}
       </div>
       
       {/* 5. Heavy Gradient Overlay (Crucial so the text remains readable) */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-vfxBlack/60 via-vfxBlack/80 to-vfxBlack" />
+      <div className="absolute inset-0 z-10 bg-linear-to-b from-vfxBlack/80 via-vfxBlack/50 to-vfxBlack" />
       
       {/* Vignette effect for the edges */}
       <div className="absolute inset-0 z-10 shadow-[inset_0_0_150px_rgba(5,5,5,1)] pointer-events-none" />
@@ -98,7 +98,7 @@ const Hero = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-5xl md:text-7xl font-bold text-white font-cinematic tracking-tighter mb-6 drop-shadow-2xl"
         >
-          Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-aiAccent to-purple-400">next feeling.</span>
+          Find your <span className="text-transparent bg-clip-text bg-linear-to-r from-aiAccent to-purple-400">next feeling.</span>
         </motion.h1>
 
         <motion.p 
@@ -117,9 +117,9 @@ const Hero = () => {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="relative group mx-auto max-w-3xl"
         >
-          <div className="absolute -inset-1 bg-gradient-to-r from-aiAccent/50 to-purple-500/50 rounded-full blur-md opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-200" />
+          <div className="absolute -inset-1 bg-linear-to-r from-aiAccent/50 to-purple-500/50 rounded-full blur-md opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-200" />
           <div className="relative flex items-center bg-black/70 backdrop-blur-xl border border-white/20 rounded-full p-2 shadow-2xl">
-            <Sparkles className="text-aiAccent ml-4 w-6 h-6 flex-shrink-0" />
+            <Sparkles className="text-aiAccent ml-4 w-6 h-6 shrink-0" />
             <input 
               type="text"
               value={query}
@@ -127,7 +127,7 @@ const Hero = () => {
               placeholder="e.g., A rainy night in Tokyo with a melancholic jazz soundtrack..."
               className="w-full bg-transparent text-white placeholder-gray-400 px-4 py-4 outline-none font-cinematic text-sm md:text-lg"
             />
-            <button className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors flex-shrink-0">
+            <button className="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition-colors shrink-0">
               Discover
             </button>
           </div>

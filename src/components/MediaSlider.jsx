@@ -39,7 +39,7 @@ const MediaSlider = ({ title, subtitle, apiEndpoint}) => {
 
   return (
     // Reduced vertical padding (py-12 instead of py-24) so multiple sliders stack nicely
-    <section className="max-w-[1400px] mx-auto relative z-20 overflow-hidden py-4 px-4">
+    <section className="max-w-350 mx-auto relative z-20 overflow-hidden py-4 px-4">
       
       <div className="flex justify-between items-end mb-8 md:mb-8 px-1 md:px-1">
         <div>
@@ -67,7 +67,7 @@ const MediaSlider = ({ title, subtitle, apiEndpoint}) => {
 
       <div 
         ref={scrollContainerRef}
-        className="flex gap-6 overflow-x-auto pb-10 snap-x snap-mandatory no-scrollbar "
+        className="flex gap-5 overflow-x-auto pb-5 snap-x snap-mandatory no-scrollbar"
       >
         {movies.map((movie, index) => (
           <motion.div
