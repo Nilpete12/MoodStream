@@ -33,7 +33,7 @@ const MovieCard = ({ movie }) => {
           {movie.media_type === 'tv' ? 'TV Series' : 'Movie'}
         </span>
 
-        <h3 className="text-white font-bold text-lg leading-tight mb-3 font-cinematic">
+        <h3 className="text-white font-semibold text-l leading-tight mb-2">
           {displayTitle}
         </h3>
         

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import Movies from './pages/Movie';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -16,6 +17,7 @@ function App() {
           <main>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/movies" element={<Movies />} />
             </Routes>
           </main>
         </div>

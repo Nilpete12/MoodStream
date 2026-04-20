@@ -31,6 +31,33 @@ router.get('/trending', async (req, res) => {
   }
 });
 
+// GET /api/movies/only-movies
+router.get('/only-movies', async (req, res) => {
+  try {
+    const apiKey = process.env.VITE_TMDB_API_KEY;
+    
+    // Grab the requested page from React (default to 1)
+    const uiPage = parseInt(req.query.page) || 1;
+
+    // To get 24 valid movies, we fetch 2 TMDB pages for every 1 UI page
+    const tmdbPage1 = (uiPage * 2) - 1;
+    const tmdbPage2 = uiPage * 2;
+
+    const [p1, p2] = await Promise.all([
+      axios.get(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}&page=${tmdbPage1}`),
+      axios.get(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}&page=${tmdbPage2}`)
+    ]);
+
+    // Combine the 40 results and send them to React
+    const combinedResults = [...p1.data.results, ...p2.data.results];
+    res.json({ results: combinedResults });
+    
+  } catch (error) {
+    console.error("Error fetching movies:", error.message);
+    res.status(500).json({ error: 'Failed to fetch movies' });
+  }
+});
+
 
 // GET /api/movies/top-movies
 router.get('/top-movies', async (req, res) => {
