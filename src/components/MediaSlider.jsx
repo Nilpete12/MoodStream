@@ -67,7 +67,7 @@ const MediaSlider = ({ title, subtitle, apiEndpoint}) => {
 
       <div 
         ref={scrollContainerRef}
-        className="flex gap-5 overflow-x-auto pb-5 snap-x snap-mandatory no-scrollbar"
+        className="flex gap-4 overflow-x-auto pb-5 snap-x snap-mandatory no-scrollbar"
       >
         {movies.map((movie, index) => (
           <motion.div

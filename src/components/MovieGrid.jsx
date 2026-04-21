@@ -2,22 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Info, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const MovieGrid = () => {
+// 1. Accept the activePlatform prop
+const MovieGrid = ({ activePlatform }) => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false); // FIXED: Added missing state
+  const [loading, setLoading] = useState(false); 
   const totalPages = 20; 
+
+  // 2. Reset to page 1 whenever the filter changes!
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activePlatform]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true); 
       try {
-        const res = await fetch(`http://localhost:5000/api/movies/only-movies?page=${currentPage}`);
+        // 3. Send both the page AND the provider to the backend
+        const res = await fetch(`http://localhost:5000/api/movies/only-movies?page=${currentPage}&provider=${activePlatform}&t=${Date.now()}`); // Cache buster
         const data = await res.json();
         
         const validMovies = data.results.filter(m => m.poster_path && m.backdrop_path);
-        
-        // FIXED: Slicing exactly 24 items ensures a perfect 4-row grid
         setMovies(validMovies.slice(0, 24)); 
       } catch (error) {
         console.error("Failed to fetch movies:", error);
@@ -28,7 +33,9 @@ const MovieGrid = () => {
     
     fetchMovies();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage]); 
+    
+  // 4. Add activePlatform to the dependency array
+  }, [currentPage, activePlatform]); 
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
@@ -41,10 +48,9 @@ const MovieGrid = () => {
   return (
     <section className="relative z-10 w-full pb-24 pt-12">
       <h1 className="text-xl font-semibold text-white uppercase tracking-widest font-cinematic flex col-span-full mb-8">
-        Popular Movies
+        {activePlatform === 'all' ? 'Popular Movies' : `${activePlatform} Movies`}
       </h1>
         
-      {/* Loading State UI */}
       {loading ? (
         <div className="h-[60vh] flex items-center justify-center text-aiAccent font-cinematic uppercase tracking-widest animate-pulse">
           Loading Movies...
@@ -52,15 +58,13 @@ const MovieGrid = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)]">
           {movies.map((movie, index) => {
-
             return (
               <motion.div
-                key={`${movie.id}-${currentPage}`} 
+                key={`${movie.id}-${currentPage}-${activePlatform}`} 
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: (index % 4) * 0.1, ease: "easeOut" }}
-                // FIXED: Corrected Tailwind syntax for aspect ratio and col-span
                 className="relative group rounded-sm overflow-hidden bg-vfxCharcoal cursor-pointer shadow-2xl border border-white/5 col-span-1 aspect-2/3"
               >
                 <img
@@ -75,7 +79,7 @@ const MovieGrid = () => {
                     whileHover={{ y: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <h3 className="text-white text-sm md:text-sm uppercase mb-1 font-semibold">
+                    <h3 className="text-white text-sm md:text-sm uppercase mb-1 font-semibold line-clamp-1">
                       {movie.title || movie.name}
                     </h3>
                     
@@ -83,14 +87,9 @@ const MovieGrid = () => {
                       <Star className="w-4 h-4 fill-current text-aiAccent" />
                       <span>{movie.vote_average?.toFixed(1)}</span>
                       
-                      {/* Wrapped the right-side elements to keep them aligned */}
                       <div className="ml-auto flex items-center gap-2">
-                        {/* The Age Rating Badge */}
-                        {/* The Age Rating Badge */}
-                            <span className="border border-white/40 text-gray-300 text-[10px] px-1.5 py-0.5 rounded-[3px] uppercase leading-none tracking-wider">
-                            {movie.age_rating || 'PG-13'}
-                            </span>
-                        
+                        {/* Dynamic Age Rating Badge added back! */}
+                       
                         <span className='text-gray-400'>{movie.release_date ? movie.release_date.split('-')[0] : ''}</span>
                       </div>
                     </div>

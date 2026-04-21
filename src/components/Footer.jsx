@@ -36,7 +36,7 @@ const Footer = () => {
         viewport={{ once: true, amount: 0.3 }} // Triggers when slightly in view
         className="max-w-7xl mx-auto px-6 md:px-12 relative z-10"
       >
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-6">
           
           {/* Brand Section */}
           <motion.div variants={itemVariants} className="md:col-span-2">

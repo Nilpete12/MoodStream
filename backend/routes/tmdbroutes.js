@@ -7,7 +7,7 @@ const router = express.Router();
 // Fetches the top trending movies from TMDB
 router.get('/trending', async (req, res) => {
   try {
-    const apiKey = process.env.VITE_TMDB_API_KEY;
+    const apiKey = process.env.TMDB_API_KEY;
 
     // 1. Fire both requests at the same time
     const [page1, page2] = await Promise.all([
@@ -34,20 +34,35 @@ router.get('/trending', async (req, res) => {
 // GET /api/movies/only-movies
 router.get('/only-movies', async (req, res) => {
   try {
-    const apiKey = process.env.VITE_TMDB_API_KEY;
+    const apiKey = process.env.TMDB_API_KEY;
     const uiPage = parseInt(req.query.page) || 1;
+    const provider = req.query.provider || 'all';
 
-    // THE FIX: This math ensures no overlapping pages!
-    // Page 1 gets TMDB 1 & 2. Page 2 gets TMDB 3 & 4. Page 3 gets 5 & 6, etc.
-    const tmdbPage1 = (uiPage * 2) - 1; 
+    const tmdbPage1 = (uiPage * 2) - 1;
     const tmdbPage2 = uiPage * 2;
 
+    // Map your frontend strings to TMDB Provider IDs
+    let providerQuery = '';
+    if (provider !== 'all') {
+      const providers = {
+        'netflix': 8,
+        'prime': 119,
+        'disney': 337,
+        'max': 384,
+        'apple': 350
+      };
+      // watch_region=US is required by TMDB when filtering by provider
+      providerQuery = `&with_watch_providers=${providers[provider]}&watch_region=US`;
+    }
+
+    // Use /discover instead of /trending to get deep pagination and filters
+    const baseUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&sort_by=popularity.desc${providerQuery}`;
+
     const [p1, p2] = await Promise.all([
-      axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${tmdbPage1}`),
-      axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${tmdbPage2}`)
+      axios.get(`${baseUrl}&page=${tmdbPage1}`),
+      axios.get(`${baseUrl}&page=${tmdbPage2}`)
     ]);
 
-    // Combine the 40 distinct results
     const combinedResults = [...p1.data.results, ...p2.data.results];
     res.json({ results: combinedResults });
     
@@ -61,7 +76,7 @@ router.get('/only-movies', async (req, res) => {
 // GET /api/movies/top-movies
 router.get('/top-movies', async (req, res) => {
   try {
-    const apiKey = process.env.VITE_TMDB_API_KEY;
+    const apiKey = process.env.TMDB_API_KEY;
     const response = await axios.get(
       `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`
     );
@@ -78,7 +93,7 @@ router.get('/top-movies', async (req, res) => {
 // GET /api/movies/top-tv
 router.get('/top-tv', async (req, res) => {
   try {
-    const apiKey = process.env.VITE_TMDB_API_KEY;
+    const apiKey = process.env.TMDB_API_KEY;
     const response = await axios.get(
       `https://api.themoviedb.org/3/tv/top_rated?api_key=${apiKey}&language=en-US&page=1`
     );
