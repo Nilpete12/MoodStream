@@ -33,8 +33,10 @@ const PlatformFilter = ({ activePlatform, setActivePlatform }) => {
                 />
               )}
               
-              <span className={`relative z-10 ${isActive ? platform.text : 'text-gray-400 hover:text-white'}`}>
-                {platform.name}
+              <span 
+                className={`relative z-10 inline-block ${isActive ? platform.text : 'text-gray-400 hover:text-white'}`}
+                style={{ transform: 'skewX(20deg)' }} 
+              > {platform.name}
               </span>
             </button>
           );
