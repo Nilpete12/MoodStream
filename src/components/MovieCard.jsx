@@ -29,18 +29,23 @@ const MovieCard = ({ movie }) => {
       <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
         
         {/* Dynamic Badge for TV vs Movie */}
-        <span className="absolute top-2 left-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-white border border-white/10">
+        <span className="absolute top-2 left-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-xs font-medium uppercase tracking-wider text-white border border-white/10">
           {movie.media_type === 'tv' ? 'TV Series' : 'Movie'}
         </span>
 
-        <h3 className="text-white font-semibold text-l leading-tight mb-2">
+        <h3 className="text-white font-sans leading-tight mb-2">
           {displayTitle}
         </h3>
         
-        <div className="flex items-center justify-between text-sm text-gray-300 font-semibold">
+        <div className="flex items-center justify-between text-sm text-gray-400 font-light">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-aiAccent fill-aiAccent" />
             <span>{movie.vote_average?.toFixed(1)}</span>
+            {movie.runtime > 0 && (
+            <span className="ml-2 text-gray-400">
+              {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
+            </span>
+      )}
           </div>
           
           {/* Grab just the year from the date string */}

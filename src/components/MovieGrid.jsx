@@ -79,17 +79,21 @@ const MovieGrid = ({ activePlatform }) => {
                     whileHover={{ y: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <h3 className="text-white text-sm md:text-sm uppercase mb-1 font-semibold line-clamp-1">
+                    <h3 className="text-white text-sm md:text-sm uppercase mb-1 font-sans">
                       {movie.title || movie.name}
                     </h3>
                     
-                    <div className="flex items-center gap-1 text-white font-semibold text-sm mb-2">
+                    <div className="flex items-center gap-1 text-gray-400 font-light text-sm mb-2">
                       <Star className="w-4 h-4 fill-current text-aiAccent" />
                       <span>{movie.vote_average?.toFixed(1)}</span>
+                      {movie.runtime > 0 && (
+                          <span className="ml-2 text-gray-400">
+                            {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
+                          </span>
+                        )}
                       
-                      <div className="ml-auto flex items-center gap-2">
-                        {/* Dynamic Age Rating Badge added back! */}
-                       
+                      
+                      <div className="ml-auto font-light flex items-center gap-2">                       
                         <span className='text-gray-400'>{movie.release_date ? movie.release_date.split('-')[0] : ''}</span>
                       </div>
                     </div>
