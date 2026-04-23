@@ -10,7 +10,7 @@ const Movies = () => {
     <div className="bg-vfxBlack min-h-screen text-white font-semibold relative">
       
       {/* 1. The Full-Screen Scroll Reveal */}
-      <MovieCurtain />
+      <MovieCurtain title="Movies" />
 
       {/* 2. The Sticky Filter Bar */}
       <PlatformFilter 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const MovieCurtain = () => {
+const MovieCurtain = ({ title = "Movies" }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const MovieCurtain = () => {
           className="fixed inset-0 z-50 bg-vfxBlack flex flex-col items-center justify-center overflow-hidden pointer-events-none"
         >
           <h1 className="text-[15vw] font-black tracking-tighter text-white font-cinematic uppercase leading-none select-none origin-center">
-            Movies
+            {title}
           </h1>
         </motion.div>
       )}

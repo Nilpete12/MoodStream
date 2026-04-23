@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Play, Info, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // 1. Accept the activePlatform prop
-const MovieGrid = ({ activePlatform }) => {
+const MovieGrid = ({ activePlatform, type = "only-movies" }) => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false); 
@@ -19,7 +19,7 @@ const MovieGrid = ({ activePlatform }) => {
       setLoading(true); 
       try {
         // 3. Send both the page AND the provider to the backend
-        const res = await fetch(`http://localhost:5000/api/movies/only-movies?page=${currentPage}&provider=${activePlatform}&t=${Date.now()}`); // Cache buster
+        const res = await fetch(`http://localhost:5000/api/movies/${type}?page=${currentPage}&provider=${activePlatform}&t=${Date.now()}`); // Cache buster
         const data = await res.json();
         
         const validMovies = data.results.filter(m => m.poster_path && m.backdrop_path);
@@ -35,7 +35,7 @@ const MovieGrid = ({ activePlatform }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
   // 4. Add activePlatform to the dependency array
-  }, [currentPage, activePlatform]); 
+  }, [currentPage, activePlatform, type]); 
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
@@ -48,7 +48,7 @@ const MovieGrid = ({ activePlatform }) => {
   return (
     <section className="relative z-10 w-full pb-24 pt-12">
       <h1 className="text-xl font-semibold text-white uppercase tracking-widest font-cinematic flex col-span-full mb-8">
-        {activePlatform === 'all' ? 'Popular Movies' : `${activePlatform} Movies`}
+        {activePlatform === 'all' ? (type === 'only-tv' ? 'Popular TV Shows' : 'Popular Movies') : `${activePlatform} ${type === 'only-tv' ? 'TV Shows' : 'Movies'}`}
       </h1>
         
       {loading ? (
