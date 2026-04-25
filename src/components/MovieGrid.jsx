@@ -19,7 +19,7 @@ const MovieGrid = ({ activePlatform, type = "only-movies" }) => {
       setLoading(true); 
       try {
         // 3. Send both the page AND the provider to the backend
-        const res = await fetch(`http://localhost:5000/api/movies/${type}?page=${currentPage}&provider=${activePlatform}&t=${Date.now()}`); // Cache buster
+        const res = await fetch(`http://localhost:5000/api/movies/${type}?page=${currentPage}&provider=${activePlatform}`); // Cache buster
         const data = await res.json();
         
         const validMovies = data.results.filter(m => m.poster_path && m.backdrop_path);
