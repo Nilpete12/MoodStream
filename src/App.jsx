@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Movies from './pages/Movie';
 import TVShows from './pages/TVShows';
+import GenreExplore from './pages/GenreExplore';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -20,6 +21,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/movies" element={<Movies />} />
               <Route path="/tv-shows" element={<TVShows />} />
+              <Route path="/genres" element={<GenreExplore />} />
+              <Route path="/genre/:genreId/:genreName" element={<GenreExplore />} />
             </Routes>
           </main>
         </div>
