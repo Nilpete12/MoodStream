@@ -29,13 +29,9 @@ const Header = () => {
   return (
     <motion.header
       initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-vfxBlack/70 backdrop-blur-lg py-4' 
-          : 'bg-transparent py-6'
-      }`}
+      animate={{ y: isScrolled ? -100 : 0 }}
+      transition={{ duration: 0.1, ease: "linear" }}
+      className={`fixed top-0 w-full z-50 transition-all py-4 bg-vfxBlack/30 backdrop-blur-lg border-b border-white/10 `}
     >
       <div className="max-w-7xl mx-auto px-2 md:px-1 flex items-center justify-between">
         
