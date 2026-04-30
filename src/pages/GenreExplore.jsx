@@ -49,7 +49,7 @@ const GenreExplore = () => {
                 {isHovered && (
                   <motion.div 
                     layoutId="outline"
-                    className="absolute -left-4 top-0 bottom-0 w-[2px] bg-aiAccent"
+                    className="absolute -left-4 top-0 bottom-0 w-0.5 bg-aiAccent"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   />
@@ -69,12 +69,12 @@ const GenreExplore = () => {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="absolute inset-0 bg-cover bg-center shadow-2xl"
             style={{ backgroundImage: `url(${genres[hoveredIndex].bg})` }}
           >
             {/* Soft gradient to blend the image into the text area */}
-            <div className="absolute inset-0 bg-gradient-to-r from-vfxBlack via-vfxBlack/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-r from-vfxBlack via-vfxBlack/20 to-transparent" />
             
             {/* Viewfinder Frame */}
             <div className="absolute inset-0 flex items-center justify-center p-12">

@@ -71,7 +71,7 @@ const Hero = () => {
     <div className="relative h-screen w-full bg-vfxBlack overflow-hidden flex items-center justify-center">
       
       {/* 4. The Scrolling Background Grids */}
-      <div className="absolute inset-0 z-0 flex gap-4 md:gap-8 opacity-100 justify-center items-center rotate-[-4deg] scale-110">
+      <div className="absolute inset-0 z-0 flex gap-4 md:gap-8 opacity-100 justify-center items-center rotate-[-8deg] scale-110">
         {movies.length > 0 && (
           <>
             {/* the less the faster */}
