@@ -51,9 +51,9 @@ const MovieGrid = ({ activePlatform, type = "only-movies" }) => {
         {activePlatform === 'all' ? (type === 'only-tv' ? 'Popular TV Shows' : 'Popular Movies') : `${activePlatform} ${type === 'only-tv' ? 'TV Shows' : 'Movies'}`}
       </h1>
         
-      {loading ? (
+      {loading ?  (
         <div className="h-[60vh] flex items-center justify-center text-aiAccent font-cinematic uppercase tracking-widest animate-pulse">
-          Loading Movies...
+          Loading...
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)]">

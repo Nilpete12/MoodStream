@@ -17,7 +17,7 @@ const TVShows = () => {
         setActivePlatform={setActivePlatform} 
       />
 
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 pt-12">
+      <div className="max-w-350 mx-auto px-6 md:px-12 pt-12">
         {/* 2. Tell the grid to fetch 'only-tv' */}
         <MovieGrid activePlatform={activePlatform} type="only-tv" />
       </div>

@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 
 const genres = [
   { id: 28, name: 'Action', bg: 'https://image.tmdb.org/t/p/original/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg' },
-  { id: 878, name: 'Sci-Fi', bg: 'https://image.tmdb.org/t/p/original/8sNiAPPYU14PUepFNeSNGUTiHW.jpg' },
-  { id: 27, name: 'Horror', bg: 'https://image.tmdb.org/t/p/original/5ik4ATKmNtmJU6AYD0bLm56BCVM.jpg' },
+  { id: 878, name: 'Sci-Fi', bg: 'https://image.tmdb.org/t/p/original/eXdZ37PSZCL0GpllxeiI3AO6jG.jpg' },
+  { id: 27, name: 'Horror', bg: 'https://image.tmdb.org/t/p/original/bCKRxNF0hIglIwp9K2O9obtF2gR.jpg' },
   { id: 16, name: 'Animation', bg: 'https://image.tmdb.org/t/p/original/Dnk4iSqqNkZBJBPeFdAegTaxD5.jpg' },
   { id: 10749, name: 'Romance', bg: 'https://image.tmdb.org/t/p/original/ik2D3KqxFD0O0Bc3Wv1CZm8sOg8.jpg' },
   { id: 53, name: 'Thriller', bg: 'https://image.tmdb.org/t/p/original/bpp58yHuQmpt6xwggI63mVRw7po.jpg' },
   { id: 35, name: 'Comedy', bg: 'https://image.tmdb.org/t/p/original/e6ZyJ1BOk38frPkzICskIsYaztg.jpg' },
   { id: 99, name: 'Documentary', bg: 'https://image.tmdb.org/t/p/original/mBB0lTVRIMhv80hqEsOKL2Tx14h.jpg' },
   { id: 18, name: 'Drama', bg: 'https://image.tmdb.org/t/p/original/hiKmpZMGZsrkA3cdce8a7Dpos1j.jpg' },
-  { id: 10751, name: 'Family', bg: 'https://image.tmdb.org/t/p/original/yOm993lsJyPmBodlYjgpPwBjXP9.jpg' },
+  { id: 10751, name: 'Family', bg: 'https://image.tmdb.org/t/p/original/jEZ0APg9Lg0uiJJkyPThlgyVHEh.jpg' },
   { id: 14, name: 'Fantasy', bg: 'https://image.tmdb.org/t/p/original/g9JfmHgUigdPJoGBt6rupT3WIXd.jpg' },
 ];
 

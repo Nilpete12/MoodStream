@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-
+axios.defaults.headers.common['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const router = express.Router();
 
 // 1. CREATE THE CACHE (Zero dependencies required!)
@@ -202,6 +202,65 @@ router.get('/top-tv', async (req, res) => {
     res.json({ results: enriched });
   } catch (error) {
     res.status(500).json({ error: 'Failed' });
+  }
+});
+
+// GET /api/movies/by-genre/:genreId
+router.get('/by-genre/:genreId', async (req, res) => {
+  try {
+    const { genreId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const apiKey = process.env.TMDB_API_KEY;
+
+    // THE FIX: Map Movie Genre IDs to their closest TV Genre ID counterparts
+    const tvGenreMap = {
+      '28': '10759',  // Action -> Action & Adventure
+      '878': '10765', // Sci-Fi -> Sci-Fi & Fantasy
+      '27': '9648',   // Horror -> Mystery (Closest TV equivalent)
+      '10749': '18',  // Romance -> Drama (Closest TV equivalent)
+      '53': '9648',   // Thriller -> Mystery
+      '16': '16',     // Animation
+      '35': '35',     // Comedy
+      '99': '99',     // Documentary
+      '18': '18',     // Drama
+      '10751': '10751', // Family
+      '14': '10765'   // Fantasy -> Sci-Fi & Fantasy
+    };
+    
+    // Fallback to the original ID if there's no special mapping
+    const tvGenreId = tvGenreMap[genreId] || genreId;
+
+    const cacheKey = `genre-${genreId}-page${page}`;
+    if (getFromCache(cacheKey)) {
+      console.log(`⚡ Serving ${cacheKey} from Memory Cache!`);
+      return res.json(getFromCache(cacheKey));
+    }
+
+    const tmdbPage1 = (page * 2) - 1;
+    const tmdbPage2 = page * 2;
+
+    const [movieP1, movieP2, tvP1, tvP2] = await Promise.all([
+      axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreId}&sort_by=popularity.desc&page=${tmdbPage1}`),
+      axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreId}&sort_by=popularity.desc&page=${tmdbPage2}`),
+      // Use the corrected TV ID here:
+      axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_genres=${tvGenreId}&sort_by=popularity.desc&page=${tmdbPage1}`),
+      axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_genres=${tvGenreId}&sort_by=popularity.desc&page=${tmdbPage2}`)
+    ]);
+
+    const combinedMovies = [...movieP1.data.results, ...movieP2.data.results];
+    const combinedTV = [...tvP1.data.results, ...tvP2.data.results];
+
+    const enrichedMovies = await enrichResults(combinedMovies.slice(0, 30), apiKey);
+    const enrichedTV = await enrichResults(combinedTV.slice(0, 30), apiKey);
+
+    const finalData = { movies: enrichedMovies, tv: enrichedTV };
+    
+    saveToCache(cacheKey, finalData);
+    res.json(finalData);
+
+  } catch (error) {
+    console.error("Genre fetch error:", error.message);
+    res.status(500).json({ error: 'Failed to fetch genre results' });
   }
 });
 
