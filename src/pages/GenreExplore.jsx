@@ -37,7 +37,7 @@ const GenreExplore = () => {
                 className="group relative flex items-baseline"
               >
                 <motion.h2 
-                  className={`text-[12vw] lg:text-[6vw] font-black uppercase leading-[0.8] transition-all duration-500 cursor-pointer ${
+                  className={`text-[12vw] lg:text-[6vw] font-bold uppercase leading-[0.8] transition-all duration-500 cursor-pointer ${
                     isHovered 
                       ? 'text-white translate-x-4' 
                       : 'text-white/10 hover:text-white/30'

@@ -264,4 +264,46 @@ router.get('/by-genre/:genreId', async (req, res) => {
   }
 });
 
+// GET /api/movies/by-country/:isoCode
+router.get('/by-country/:isoCode', async (req, res) => {
+  try {
+    const { isoCode } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const apiKey = process.env.TMDB_API_KEY;
+
+    const cacheKey = `country-${isoCode}-page${page}`;
+    if (getFromCache(cacheKey)) {
+      console.log(`⚡ Serving ${cacheKey} from Memory Cache!`);
+      return res.json(getFromCache(cacheKey));
+    }
+
+    // Fetch BOTH movies and TV shows for this specific country
+    const [movieRes, tvRes] = await Promise.all([
+      axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_origin_country=${isoCode}&sort_by=popularity.desc&page=${page}`),
+      axios.get(`https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_origin_country=${isoCode}&sort_by=popularity.desc&page=${page}`)
+    ]);
+
+    // Take top 15 of each to make a 30-item grid
+    const topMovies = movieRes.data.results.slice(0, 15);
+    const topTV = tvRes.data.results.slice(0, 16);
+
+    // Combine them into a single array (interleaving them makes for a cool mixed grid)
+    const combined = [];
+    for (let i = 0; i < 15; i++) {
+      if (topMovies[i]) combined.push(topMovies[i]);
+      if (topTV[i]) combined.push(topTV[i]);
+    }
+
+    // Enrich the combined list
+    const enriched = await enrichResults(combined, apiKey);
+
+    saveToCache(cacheKey, enriched);
+    res.json({ results: enriched });
+
+  } catch (error) {
+    console.error("Country fetch error:", error.message);
+    res.status(500).json({ error: 'Failed to fetch country results' });
+  }
+});
+
 export default router;

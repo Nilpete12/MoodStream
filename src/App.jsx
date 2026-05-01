@@ -5,6 +5,8 @@ import Movies from './pages/Movie';
 import TVShows from './pages/TVShows';
 import GenreExplore from './pages/GenreExplore';
 import GenreResults from './pages/GenreResults';
+import Country from './pages/Country';
+import CountryResults from './pages/CountryResults';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -24,6 +26,8 @@ function App() {
               <Route path="/tv-shows" element={<TVShows />} />
               <Route path="/genres" element={<GenreExplore />} />
               <Route path="/genre/:genreId/:genreName" element={<GenreResults />} />
+              <Route path="/country" element={<Country />} />
+              <Route path="/country/:isoCode/:countryName" element={<CountryResults />} />
             </Routes>
           </main>
         </div>
