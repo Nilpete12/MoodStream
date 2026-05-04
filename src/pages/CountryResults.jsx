@@ -85,7 +85,7 @@ const CountryResults = () => {
   if (loading && page === 1) {
     return (
       <div className="h-screen bg-vfxBlack flex items-center justify-center text-aiAccent font-cinematic uppercase tracking-widest animate-pulse">
-        Loading {countryName} Database...
+        Loading {countryName}...
       </div>
     );
   }

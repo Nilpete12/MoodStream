@@ -4,17 +4,14 @@ import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simp
 import { motion } from 'framer-motion';
 import ShareBanner from '../components/ShareBanner';
 
-// This is a lightweight TopoJSON file of the world map provided by the react-simple-maps creators
-// const geoUrl = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
-const geoUrl = "/world-countries.json"; 
+// 1. Import the ISO converter and its English data
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
 
-// We need a quick dictionary to map full country names to their TMDB 2-letter codes
-const countryCodes = {
-  "India": "IN", "United States": "US", "Japan": "JP", "South Korea": "KR", 
-  "United Kingdom": "GB", "France": "FR", "Spain": "ES", "Italy": "IT", 
-  "Germany": "DE", "Brazil": "BR", "Mexico": "MX", "Canada": "CA"
-  // You can expand this list!
-};
+// 2. Register the locale (required for the package to know how to read names)
+countries.registerLocale(enLocale);
+
+const geoUrl = "/world-countries.json";
 
 const Country = () => {
   const navigate = useNavigate();
@@ -22,11 +19,14 @@ const Country = () => {
 
   const handleCountryClick = (geo) => {
     const countryName = geo.properties.name;
-    const isoCode = countryCodes[countryName] || geo.id; // Fallback to geo.id if not in dictionary
-    
+    const isoCode = countries.alpha3ToAlpha2(geo.id) || countries.getAlpha2Code(countryName, 'en');    
     // Only navigate if we have a valid ISO code
     if (isoCode) {
       navigate(`/country/${isoCode}/${countryName}`);
+    }
+    else {
+      // Just in case a user clicks Antarctica or a disputed territory without a TMDB database
+      console.warn(`MoodStream couldn't find a valid 2-letter code for ${countryName}`);
     }
   };
 
@@ -38,7 +38,7 @@ const Country = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8 z-10"
       >
-        <h1 className="text-3xl md:text-5xl font-normal uppercase tracking-widest text-white mb-2">
+        <h1 className="text-3xl md:text-5xl font-normal uppercase tracking-widest text-white mt-4">
           Global Cinema
         </h1>
         <p className="text-gray-400 font-light tracking-wider text-sm">
@@ -46,7 +46,7 @@ const Country = () => {
         </p>
         
         {/* Dynamic Tooltip */}
-        <div className="h-8 mt- text-aiAccent font-bold uppercase tracking-widest text-lg">
+        <div className="h-8 text-aiAccent font-bold uppercase tracking-widest text-lg">
           {tooltipContent}
         </div>
       </motion.div>
@@ -59,7 +59,6 @@ const Country = () => {
         className="w-full max-w-300 aspect-video md:aspect-2/1 bg-white/5 rounded-2xl overflow-hidden border border-white/10 shadow-2xl relative"
       >
         <ComposableMap projection="geoMercator" className="w-full h-full object-cover">
-          <ZoomableGroup center={[0, 20]} zoom={1} minZoom={1} maxZoom={4}>
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
                 geographies.map((geo) => (
@@ -71,9 +70,9 @@ const Country = () => {
                     onClick={() => handleCountryClick(geo)}
                     style={{
                       default: {
-                        fill: "#1a1a1a", // Base dark color
-                        stroke: "#333",  // Subtle borders
-                        strokeWidth: 0.5,
+                        fill: "grey", // Base dark color
+                        stroke: "black",  // Subtle borders
+                        strokeWidth: 0.4,
                         outline: "none",
                       },
                       hover: {
@@ -92,10 +91,9 @@ const Country = () => {
                 ))
               }
             </Geographies>
-          </ZoomableGroup>
         </ComposableMap>
       </motion.div>
-              < ShareBanner />
+      <ShareBanner />
     </div>
   );
 };
