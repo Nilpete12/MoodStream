@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Info, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import MovieCard from './MovieCard';
 
 // 1. Accept the activePlatform prop
 const MovieGrid = ({ activePlatform, type = "only-movies" }) => {
@@ -59,47 +60,11 @@ const MovieGrid = ({ activePlatform, type = "only-movies" }) => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)]">
           {movies.map((movie, index) => {
             return (
-              <motion.div
+              <MovieCard 
                 key={`${movie.id}-${currentPage}-${activePlatform}`} 
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: (index % 4) * 0.1, ease: "easeOut" }}
-                className="relative group rounded-sm overflow-hidden bg-vfxCharcoal cursor-pointer shadow-2xl border border-white/5 col-span-1 aspect-2/3"
-              >
-                <img
-                  src={`https://image.tmdb.org/t/p/w780${movie.poster_path}`}
-                  alt={movie.title || movie.name}
-                  className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
-                />
-
-                <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 to-transparent opacity-100 transition-all duration-500 flex flex-col justify-end py-6 px-3">
-                  <motion.div
-                    initial={{ y: 20 }}
-                    whileHover={{ y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <h3 className="text-white text-sm md:text-sm uppercase mb-1 font-sans">
-                      {movie.title || movie.name}
-                    </h3>
-                    
-                    <div className="flex items-center gap-1 text-gray-400 font-light text-sm mb-2">
-                      <Star className="w-4 h-4 fill-current text-aiAccent" />
-                      <span>{movie.vote_average?.toFixed(1)}</span>
-                      {movie.runtime > 0 && (
-                          <span className="ml-2 text-gray-400">
-                            {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
-                          </span>
-                        )}
-                      
-                      
-                      <div className="ml-auto font-light flex items-center gap-2">                       
-                        <span className='text-gray-400'>{movie.release_date ? movie.release_date.split('-')[0] : ''}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-              </motion.div>
+                item={movie} 
+                index={index}
+              />
             );
           })}
         </div>

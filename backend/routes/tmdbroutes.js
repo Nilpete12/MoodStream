@@ -306,4 +306,48 @@ router.get('/by-country/:isoCode', async (req, res) => {
   }
 });
 
+// GET /api/movies/details/:type/:id
+// Handles both 'movie' and 'tv' details + cast + trailers
+router.get('/details/:type/:id', async (req, res) => {
+  try {
+    const { type, id } = req.params;
+    const apiKey = process.env.TMDB_API_KEY;
+
+    // Security check to ensure type is valid
+    if (type !== 'movie' && type !== 'tv') {
+      return res.status(400).json({ error: 'Invalid media type' });
+    }
+
+    const cacheKey = `details-${type}-${id}`;
+    if (getFromCache(cacheKey)) {
+      console.log(`⚡ Serving ${cacheKey} from Memory Cache!`);
+      return res.json(getFromCache(cacheKey));
+    }
+
+    // append_to_response fetches the main data, PLUS the cast (credits), PLUS the trailers (videos)
+    const url = `https://api.themoviedb.org/3/${type}/${id}?api_key=${apiKey}&append_to_response=credits,videos,watch/providers,similar`;    
+    
+    const response = await axios.get(url);
+    const data = response.data;
+
+    // Optional: Clean up the data before sending to frontend to save bandwidth
+    const cleanedData = {
+      ...data,
+      // Just grab the top 10 actors
+      credits: { cast: data.credits.cast.slice(0, 10) }, 
+      // Just grab YouTube trailers
+      videos: { 
+        results: data.videos.results.filter(v => v.site === 'YouTube' && v.type === 'Trailer') 
+      }
+    };
+
+    saveToCache(cacheKey, cleanedData);
+    res.json(cleanedData);
+
+  } catch (error) {
+    console.error("Details fetch error:", error.message);
+    res.status(500).json({ error: 'Failed to fetch media details' });
+  }
+});
+
 export default router;

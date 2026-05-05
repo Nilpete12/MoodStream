@@ -7,6 +7,7 @@ import GenreExplore from './pages/GenreExplore';
 import GenreResults from './pages/GenreResults';
 import Country from './pages/Country';
 import CountryResults from './pages/CountryResults';
+import MediaDetails from './pages/MediaDetails';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/genre/:genreId/:genreName" element={<GenreResults />} />
               <Route path="/country" element={<Country />} />
               <Route path="/country/:isoCode/:countryName" element={<CountryResults />} />
+              <Route path="/details/:type/:id" element={<MediaDetails />} />
             </Routes>
           </main>
         </div>

@@ -14,7 +14,6 @@ const Home = () => {
         title="Trending" 
         subtitle="Now" 
         apiEndpoint="/api/movies/trending" 
-        desc="ddwd"
       />
 
       <MediaSlider

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ChevronLeft, Star, Loader2 } from 'lucide-react';
+import { ChevronLeft, Loader2 } from 'lucide-react';
+// 1. ADD THE IMPORT
+import MovieCard from '../components/MovieCard';
 
 const CountryResults = () => {
   // Grab the parameters passed by the Map click
@@ -38,49 +39,7 @@ const CountryResults = () => {
     fetchCountryData();
   }, [isoCode, page]);
 
-  // Reusable Media Card
-  const MediaCard = ({ item, index }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: (index % 5) * 0.1 }} // Staggered reveal
-      className="relative group rounded-sm overflow-hidden bg-vfxCharcoal cursor-pointer shadow-2xl border border-white/5 aspect-2/3"
-    >
-      <img
-        src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-        alt={item.title || item.name}
-        className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
-      />
-      
-      {/* Media Type Badge (Movie vs TV) */}
-      <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-white border border-white/10 z-10 shadow-lg">
-        {item.media_type === 'tv' ? 'Series' : 'Movie'}
-      </div>
-
-      <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 to-transparent opacity-100 flex flex-col justify-end p-4 transition-opacity duration-300">
-        <h3 className="text-white text-sm md:text-base uppercase mb-1 font-semibold">
-          {item.title || item.name}
-        </h3>
-        <div className="flex items-center gap-1 text-gray-400 font-light text-xs mb-1">
-          <Star className="w-3.5 h-3.5 fill-current text-aiAccent" />
-          <span>{item.vote_average?.toFixed(1)}</span>
-          
-          {item.runtime > 0 && (
-            <span className="ml-1 text-gray-400 font-medium">
-              • {Math.floor(item.runtime / 60)}h {item.runtime % 60}m
-            </span>
-          )}
-          
-          <div className="ml-auto font-light flex items-center gap-2">
-            <span className='text-gray-400'>
-              {(item.release_date || item.first_air_date)?.split('-')[0]}
-            </span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
+  // 2. DELETED THE ENTIRE inline MediaCard component here!
 
   if (loading && page === 1) {
     return (
@@ -109,11 +68,11 @@ const CountryResults = () => {
       </header>
 
       {/* Grid */}
-      <div className="max-w-400 w-full mx-auto px-6 md:px-12 pt-12">
+      <div className="max-w-[1600px] w-full mx-auto px-6 md:px-12 pt-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)]">
           {media.map((item, idx) => (
-            // Using ID + idx to prevent React key errors if TMDB returns a duplicate on a new page
-            <MediaCard key={`${item.id}-${idx}`} item={item} index={idx} />
+            // 3. USING THE UNIVERSAL MOVIE CARD
+            <MovieCard key={`${item.id}-${idx}`} item={item} index={idx} />
           ))}
         </div>
 
