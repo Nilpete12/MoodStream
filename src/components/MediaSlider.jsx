@@ -82,9 +82,9 @@ const MediaSlider = ({ title, subtitle, apiEndpoint }) => {
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="min-w-40 md:min-w-50 lg:min-w-55 snap-start shrink-0 flex items-center justify-center"
+          className="min-w-40 md:min-w-50 snap-start flex items-center justify-center"
         >
-          <button className="group w-full h-60 md:h-75 lg:h-82.5 rounded-sm border border-white/10 bg-vfxCharcoal/50 hover:bg-white/5 flex flex-col items-center justify-center gap-4 transition-all duration-300 shadow-2xl">
+          <button className="group w-full h-60 md:h-75 rounded-sm border border-white/10 bg-vfxCharcoal/50 hover:bg-white/5 flex flex-col items-center justify-center gap-4 transition-all duration-300 shadow-2xl">
             <div className="w-16 h-16 rounded-full bg-aiAccent/20 text-aiAccent flex items-center justify-center group-hover:scale-110 group-hover:bg-aiAccent group-hover:text-white transition-all duration-300">
               <ArrowRight className="w-8 h-8" />
             </div>

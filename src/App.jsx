@@ -5,6 +5,7 @@ import Movies from './pages/Movie';
 import TVShows from './pages/TVShows';
 import GenreExplore from './pages/GenreExplore';
 import GenreResults from './pages/GenreResults';
+import PersonDetails from './pages/PersonDetails';
 import Country from './pages/Country';
 import CountryResults from './pages/CountryResults';
 import MediaDetails from './pages/MediaDetails';
@@ -30,6 +31,7 @@ function App() {
               <Route path="/country" element={<Country />} />
               <Route path="/country/:isoCode/:countryName" element={<CountryResults />} />
               <Route path="/details/:type/:id" element={<MediaDetails />} />
+              <Route path="/person/:id" element={<PersonDetails />} />
             </Routes>
           </main>
         </div>

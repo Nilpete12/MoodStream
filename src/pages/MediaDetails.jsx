@@ -60,12 +60,12 @@ const MediaDetails = () => {
           alt={title}
           className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-vfxBlack via-vfxBlack/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-vfxBlack via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-vfxBlack via-vfxBlack/80 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-vfxBlack via-transparent to-transparent" />
       </div>
 
       {/* 2. CONTENT CONTAINER */}
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 pt-8 md:pt-24 pb-24">
+      <div className="relative z-10 max-w-350 mx-auto px-6 md:px-12 pt-8 md:pt-24 pb-24">
         
         <Link to={-1} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors uppercase tracking-widest text-xs font-bold mb-8 md:mb-16">
           <ChevronLeft className="w-4 h-4" /> Go Back
@@ -74,7 +74,7 @@ const MediaDetails = () => {
         <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-start">
           
           {/* Left Column: Poster & Providers */}
-          <div className="w-full md:w-1/5 max-w-[350px] shrink-0 flex flex-col gap-6">
+          <div className="w-full md:w-1/5 max-w-87.5 shrink-0 flex flex-col gap-6">
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}

@@ -350,4 +350,39 @@ router.get('/details/:type/:id', async (req, res) => {
   }
 });
 
+// GET /api/movies/person/:id
+router.get('/person/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const apiKey = process.env.TMDB_API_KEY;
+
+    const cacheKey = `person-${id}`;
+    if (getFromCache(cacheKey)) {
+      console.log(`⚡ Serving ${cacheKey} from Memory Cache!`);
+      return res.json(getFromCache(cacheKey));
+    }
+
+    // Fetch person details AND their combined movie/tv credits
+    const url = `https://api.themoviedb.org/3/person/${id}?api_key=${apiKey}&append_to_response=combined_credits`;
+    
+    const response = await axios.get(url);
+    const data = response.data;
+
+    // Clean up the data: Filter out roles without posters and sort by popularity
+    if (data.combined_credits && data.combined_credits.cast) {
+      data.combined_credits.cast = data.combined_credits.cast
+        .filter(item => item.poster_path) // Must have an image
+        .sort((a, b) => b.popularity - a.popularity) // Show biggest hits first
+        .slice(0, 30); // Top 30 titles is plenty for a grid
+    }
+
+    saveToCache(cacheKey, data);
+    res.json(data);
+
+  } catch (error) {
+    console.error("Person fetch error:", error.message);
+    res.status(500).json({ error: 'Failed to fetch person details' });
+  }
+});
+
 export default router;
