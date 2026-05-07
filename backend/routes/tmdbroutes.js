@@ -385,4 +385,40 @@ router.get('/person/:id', async (req, res) => {
   }
 });
 
+// GET /api/movies/search?q=query&page=1
+router.get('/search', async (req, res) => {
+  try {
+    const { q, page = 1 } = req.query;
+    if (!q) return res.json({ results: [] });
+
+    const apiKey = process.env.TMDB_API_KEY;
+    const cacheKey = `search-${q}-page${page}`;
+
+    if (getFromCache(cacheKey)) {
+      return res.json(getFromCache(cacheKey));
+    }
+
+    const url = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${encodeURIComponent(q)}&page=${page}&include_adult=false`;
+    
+    const response = await axios.get(url);
+    
+    // Clean data: Only keep results that have an image (poster or profile)
+    const cleanedResults = response.data.results.filter(
+      item => item.poster_path || item.profile_path
+    );
+
+    const finalData = {
+      ...response.data,
+      results: cleanedResults
+    };
+
+    saveToCache(cacheKey, finalData);
+    res.json(finalData);
+
+  } catch (error) {
+    console.error("Search fetch error:", error.message);
+    res.status(500).json({ error: 'Failed to search' });
+  }
+});
+
 export default router;

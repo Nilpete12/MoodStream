@@ -68,7 +68,7 @@ const CountryResults = () => {
       </header>
 
       {/* Grid */}
-      <div className="max-w-[1600px] w-full mx-auto px-6 md:px-12 pt-12">
+      <div className="max-w-400 w-full mx-auto px-6 md:px-12 pt-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)]">
           {media.map((item, idx) => (
             // 3. USING THE UNIVERSAL MOVIE CARD

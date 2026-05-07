@@ -21,7 +21,7 @@ const ShareBanner = () => {
   ];
 
   return (
-    <section className="w-full mx-auto py-12 relative z-20 mt-5 ">
+    <section className="w-full px-6 py-12 relative z-20 mt-5">
       
       {/* Dashed Container */}    
       <div className="flex flex-col lg:flex-row items-center justify-between p-6 md:px-10 border border-dashed border-gray-700 rounded bg-black/40 backdrop-blur-sm">

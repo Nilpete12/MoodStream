@@ -46,9 +46,9 @@ const PersonDetails = () => {
     <div className="bg-vfxBlack min-h-screen text-white font-cinematic relative overflow-hidden pb-24">
       
       {/* Background ambient glow based on standard app accent */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[500px] bg-aiAccent/5 blur-[150px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-250 h-125 bg-aiAccent/5 blur-[150px] rounded-full pointer-events-none z-0" />
 
-      <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 pt-8 md:pt-24">
+      <div className="relative z-10 max-w-350 mx-auto px-6 md:px-12 pt-8 md:pt-24">
         
         {/* Back Button */}
         <Link to={-1} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors uppercase tracking-widest text-xs font-bold mb-8 md:mb-12">
@@ -62,7 +62,7 @@ const PersonDetails = () => {
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full md:w-1/4 max-w-[350px] shrink-0"
+            className="w-full md:w-1/4 max-w-87.5 shrink-0"
           >
             {person.profile_path ? (
               <img
@@ -71,7 +71,7 @@ const PersonDetails = () => {
                 className="w-full rounded-lg shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/10"
               />
             ) : (
-              <div className="w-full aspect-[2/3] bg-white/5 rounded-lg border border-white/10 flex items-center justify-center text-gray-500">
+              <div className="w-full aspect-2/3 bg-white/5 rounded-lg border border-white/10 flex items-center justify-center text-gray-500">
                 No Image Available
               </div>
             )}
