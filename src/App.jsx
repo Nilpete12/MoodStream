@@ -7,6 +7,7 @@ import GenreExplore from './pages/GenreExplore';
 import GenreResults from './pages/GenreResults';
 import PersonDetails from './pages/PersonDetails';
 import Country from './pages/Country';
+import Watchlist from './pages/Watchlist';
 import SearchResults from './pages/SearchResults';
 import CountryResults from './pages/CountryResults';
 import MediaDetails from './pages/MediaDetails';
@@ -34,6 +35,7 @@ function App() {
               <Route path="/details/:type/:id" element={<MediaDetails />} />
               <Route path="/person/:id" element={<PersonDetails />} />
               <Route path="/search/:query" element={<SearchResults />} />
+              <Route path="/watchlist" element={<Watchlist />} />
             </Routes>
           </main>
         </div>
