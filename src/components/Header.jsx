@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Film, Search, User, Menu, X } from 'lucide-react';
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import SearchModal from './SearchModal';
 
 const Header = () => {
@@ -52,7 +53,7 @@ const Header = () => {
           </Link>
 
           {/* DESKTOP NAVIGATION */}
-          <nav className="hidden md:flex ml-75 gap-7">
+          <nav className="hidden md:flex ml-60 gap-7">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
@@ -82,9 +83,21 @@ const Header = () => {
             
             <div className="hidden md:block w-px h-5 bg-white/20"></div>
             
-            <button className="hidden md:flex text-gray-400 hover:text-white transition-colors items-center gap-2">
-              <User className="w-5 h-5" />
-            </button>
+            <SignedOut>
+              <SignInButton mode="modal">
+              <button className="text-xs md:text-xs font-bold uppercase tracking-widest px-4 py-2 bg-white text-black rounded hover:bg-gray-300 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                Sign In
+              </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <div className="flex items-center gap-4">
+              <Link to="/watchlist" className="hidden md:block text-xs uppercase tracking-widest font-bold text-gray-300 hover:text-white transition">
+                Watchlist
+              </Link>
+              <UserButton afterSignOutUrl="/" /> 
+              </div>
+            </SignedIn>
 
             {/* MOBILE MENU BUTTON */}
             <button 
