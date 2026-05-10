@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Star, Play, X, Clock, Calendar, Plus, Check, MonitorPlay, Film, Activity } from 'lucide-react';
 import MovieCard from '../components/MovieCard'; // Reusing your universal card!
 import ShareBanner from '../components/ShareBanner'; // New share banner component
+import { useUser, useAuth } from '@clerk/clerk-react';
+import { supabase } from '../supabaseClient';
 
 const MediaDetails = () => {
   const { type, id } = useParams();
@@ -11,6 +13,26 @@ const MediaDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showTrailer, setShowTrailer] = useState(false);
   const [inWatchlist, setInWatchlist] = useState(false); // Mock watchlist state
+  const { user, isSignedIn } = useUser();
+  const { getToken } = useAuth(); // Optional, but good practice
+
+  // Check if this movie is already in the user's watchlist when the page loads
+  useEffect(() => {
+    const checkIfWatchlisted = async () => {
+      if (!isSignedIn || !user) return;
+      
+      const { data, error } = await supabase
+        .from('watchlists')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('movie_id', Number(id));
+
+      if (data && data.length > 0) {
+        setInWatchlist(true);
+      }
+    };
+    checkIfWatchlisted();
+  }, [id, isSignedIn, user]);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -46,6 +68,40 @@ const MediaDetails = () => {
   // Streaming Providers (Defaulting to US for now)
   const usProviders = data['watch/providers']?.results?.US;
   const streamProviders = usProviders?.flatrate || [];
+
+  //Handling Watchlist Toggle (Add/Remove)
+  const handleWatchlistToggle = async () => {
+    if (!isSignedIn) {
+      alert("Please log in to add to your watchlist!");
+      return;
+    }
+
+    if (inWatchlist) {
+      // DELETE FROM SUPABASE
+      const { error } = await supabase
+        .from('watchlists')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('movie_id', Number(id));
+
+      if (error) console.error("Supabase Delete Error:", error); // <-- ADD THIS
+      if (!error) setInWatchlist(false);
+    } else {
+      // INSERT INTO SUPABASE
+      const { error } = await supabase
+        .from('watchlists')
+        .insert([
+          { 
+            user_id: user.id, 
+            movie_id: Number(id), 
+            media_type: type 
+          }
+        ]);
+
+      if (error) console.error("Supabase Insert Error:", error); // <-- ADD THIS
+      if (!error) setInWatchlist(true);
+    }
+  };
   
   // Production info formatters
   const formatCurrency = (amount) => amount > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount) : 'Unknown';
@@ -195,7 +251,7 @@ const MediaDetails = () => {
               
               {/* Add to Watchlist Button */}
               <button 
-                onClick={() => setInWatchlist(!inWatchlist)}
+                onClick={handleWatchlistToggle}
                 className={`px-8 py-3 rounded text-sm font-bold tracking-widest uppercase transition flex items-center gap-2 border ${
                   inWatchlist 
                     ? 'bg-aiAccent/20 border-aiAccent text-aiAccent' 

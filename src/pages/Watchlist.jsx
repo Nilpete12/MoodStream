@@ -3,19 +3,75 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Lock, Bookmark, Film, Plus } from 'lucide-react';
 import MovieCard from '../components/MovieCard';
-// 1. IMPORT CLERK HOOK AND BUTTON
 import { useUser, SignInButton } from "@clerk/clerk-react";
+import { supabase } from '../supabaseClient';
 
 const Watchlist = () => {
-  // 2. USE REAL AUTH STATE INSTEAD OF MOCK STATE
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, user, isLoaded } = useUser();
   const [watchlist, setWatchlist] = useState([]);
+  const [isFetchingData, setIsFetchingData] = useState(true);
 
-  // Replace our old setTimeout with Clerk's actual load state
-  if (!isLoaded) {
+  useEffect(() => {
+    const fetchWatchlistData = async () => {
+      // 1. If clerk is still loading, or user isn't logged in, stop here.
+      if (!isLoaded) return;
+      if (!isSignedIn || !user) {
+        setIsFetchingData(false);
+        return;
+      }
+
+      try {
+        // 2. Fetch the saved IDs from Supabase (ordered by newest first)
+        const { data: supabaseData, error } = await supabase
+          .from('watchlists')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        // If their list is empty, stop here
+        if (!supabaseData || supabaseData.length === 0) {
+          setWatchlist([]);
+          setIsFetchingData(false);
+          return;
+        }
+
+        // 3. Hydrate the IDs with real TMDB data using your Node backend
+        // We use Promise.all to fetch them all simultaneously instead of one by one
+        const hydratedData = await Promise.all(
+          supabaseData.map(async (item) => {
+            const res = await fetch(`http://localhost:5000/api/movies/details/${item.media_type}/${item.movie_id}`);
+            const tmdbData = await res.json();
+            
+            // Return the TMDB data, but manually inject the media_type from Supabase
+            // so your MovieCard knows if it's a 'movie' or 'tv' for routing!
+            return {
+              ...tmdbData,
+              media_type: item.media_type 
+            };
+          })
+        );
+
+        // Filter out any potential nulls/errors from the API
+        const validData = hydratedData.filter(movie => movie && !movie.error);
+        setWatchlist(validData);
+
+      } catch (err) {
+        console.error("Error fetching watchlist:", err);
+      } finally {
+        setIsFetchingData(false);
+      }
+    };
+
+    fetchWatchlistData();
+  }, [isSignedIn, user, isLoaded]);
+
+  // Loading UI while Clerk authenticates OR while we fetch from TMDB
+  if (!isLoaded || isFetchingData) {
     return (
       <div className="h-screen bg-vfxBlack flex items-center justify-center text-aiAccent font-cinematic uppercase tracking-widest animate-pulse">
-        Authenticating User...
+        Accessing Secure Vault...
       </div>
     );
   }
@@ -24,7 +80,7 @@ const Watchlist = () => {
     <div className="bg-vfxBlack min-h-screen flex flex-col font-cinematic text-white py-16 relative">
       
       {/* Header */}
-      <header className="h-20 md:h-20 border-b border-white/10 flex items-center justify-between px-6 md:px-6 bg-vfxBlack sticky top-0 z-50">
+      <header className="h-20 md:h-20 border-b border-white/10 flex items-center justify-between px-6 md:px-8 bg-vfxBlack sticky top-0 z-50">
         <h1 className="text-2xl md:text-2xl font-black uppercase tracking-widest text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center gap-4">
           <Bookmark className="w-6 h-6 md:w-8 md:h-8 text-aiAccent" />
           My Watchlist
@@ -36,7 +92,7 @@ const Watchlist = () => {
         )}
       </header>
 
-      <div className="max-w-400 w-full mx-auto px-6 md:px-12 flex-1 flex flex-col">
+      <div className="max-w-400 w-full mx-auto px-6 md:px-12 my-8 flex-1 flex flex-col">
         
         {/* SCENARIO 1: Not Logged In */}
         {!isSignedIn && (
@@ -52,7 +108,6 @@ const Watchlist = () => {
             <p className="text-gray-400 font-light max-w-md mx-auto mb-10 text-lg">
               Log in to MoodStream to save movies and series to your personal cinematic vault.
             </p>
-            {/* USE CLERK'S MODAL BUTTON */}
             <SignInButton mode="modal">
               <button className="bg-white text-black px-10 py-4 rounded font-bold tracking-widest uppercase hover:bg-gray-300 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                 Sign In / Sign Up
@@ -89,10 +144,10 @@ const Watchlist = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)]"
+            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(250px,auto)] pb-24"
           >
             {watchlist.map((item, idx) => (
-              <MovieCard key={item.id} item={item} index={idx} />
+              <MovieCard key={`${item.id}-${idx}`} item={item} index={idx} />
             ))}
           </motion.div>
         )}
