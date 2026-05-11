@@ -107,7 +107,7 @@ const MediaDetails = () => {
   const formatCurrency = (amount) => amount > 0 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount) : 'Unknown';
 
   return (
-    <div className="bg-vfxBlack mt-16 min-h-screen text-white font-cinematic relative overflow-hidden">
+    <div className="bg-vfxBlack min-h-screen text-white font-cinematic relative overflow-hidden">
       
       {/* 1. IMMERSIVE BACKDROP */}
       <div className="absolute top-0 left-0 w-full h-[70vh] md:h-[85vh] z-0">

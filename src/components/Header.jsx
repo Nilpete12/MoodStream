@@ -31,7 +31,7 @@ const Header = () => {
     { name: 'TV Shows', path: '/tv-shows' },
     { name: 'Genres', path: '/genres' },
     { name: 'Country', path: '/country'},
-    { name: 'Watchlist', path: '/watchlist' },
+    // { name: 'Watchlist', path: '/watchlist' },
   ];
 
   return (
@@ -51,9 +51,8 @@ const Header = () => {
               Mood<span className="text-gray-500 font-normal">Stream</span>
             </span>
           </Link>
-
           {/* DESKTOP NAVIGATION */}
-          <nav className="hidden md:flex ml-60 gap-7">
+          <nav className="hidden md:flex ml-80 gap-7">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (

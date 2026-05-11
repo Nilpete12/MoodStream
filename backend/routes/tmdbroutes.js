@@ -2,6 +2,64 @@ import express from 'express';
 import axios from 'axios';
 axios.defaults.headers.common['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const router = express.Router();
+import { GoogleGenerativeAI } from '@google/generative-ai';
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// POST /api/movies/ai-search
+router.post('/ai-search', async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    const tmdbApiKey = process.env.TMDB_API_KEY;
+
+    // 1. The AI Prompt Engineering
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const systemPrompt = `
+      You are an elite cinematic curator. The user will give you a mood, vibe, or aesthetic. 
+      Recommend exactly 12 movies or TV shows that perfectly match this vibe.
+      You MUST return ONLY a valid JSON array of strings containing the exact titles. 
+      Do not include markdown, backticks, or any other text.
+      Example output: ["Blade Runner 2049", "Dune", "Arrival", "Annihilation", "Ex Machina", "Interstellar"]
+      
+      User Mood: "${prompt}"
+    `;
+
+    // 2. Ask Gemini for the titles
+    const aiResult = await model.generateContent(systemPrompt);
+    const responseText = aiResult.response.text().trim();
+    
+    // Safely parse the JSON array from Gemini
+    let titles = [];
+    try {
+      titles = JSON.parse(responseText.replace(/```json/g, '').replace(/```/g, ''));
+    } catch (e) {
+      console.error("Failed to parse AI response:", responseText);
+      return res.status(500).json({ error: "AI failed to format the response properly." });
+    }
+
+    // 3. Hydrate the titles with real TMDB Data
+    // We search TMDB for each title Gemini gave us and grab the top result
+    const hydratedResults = await Promise.all(
+      titles.map(async (title) => {
+        try {
+          const tmdbRes = await axios.get(`https://api.themoviedb.org/3/search/multi?api_key=${tmdbApiKey}&query=${encodeURIComponent(title)}&page=1`);
+          // Return the first valid movie/tv result that has a poster
+          return tmdbRes.data.results.find(item => item.poster_path && (item.media_type === 'movie' || item.media_type === 'tv'));
+        } catch (err) {
+          return null;
+        }
+      })
+    );
+
+    // Filter out any nulls in case TMDB couldn't find a match
+    const validResults = hydratedResults.filter(item => item !== null);
+
+    res.json({ results: validResults });
+
+  } catch (error) {
+    console.error("AI Search Route Error:", error);
+    res.status(500).json({ error: "Failed to process AI search." });
+  }
+});
 
 // 1. CREATE THE CACHE (Zero dependencies required!)
 const cache = new Map();
