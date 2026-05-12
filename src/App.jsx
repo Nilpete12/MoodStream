@@ -11,6 +11,7 @@ import Watchlist from './pages/Watchlist';
 import SearchResults from './pages/SearchResults';
 import CountryResults from './pages/CountryResults';
 import MediaDetails from './pages/MediaDetails';
+import MoodResults from './pages/MoodResults';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/person/:id" element={<PersonDetails />} />
               <Route path="/search/:query" element={<SearchResults />} />
               <Route path="/watchlist" element={<Watchlist />} />
+              <Route path="/mood-results" element={<MoodResults />} />
             </Routes>
           </main>
         </div>

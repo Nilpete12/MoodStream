@@ -3,29 +3,36 @@ import axios from 'axios';
 axios.defaults.headers.common['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 const router = express.Router();
 import { GoogleGenerativeAI } from '@google/generative-ai';
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // POST /api/movies/ai-search
 router.post('/ai-search', async (req, res) => {
   try {
     const { prompt } = req.body;
+    console.log("1. Prompt received:", prompt); // <--- CHECKPOINT 1
     const tmdbApiKey = process.env.TMDB_API_KEY;
-
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    console.log("My Gemini Key is:", geminiApiKey ? "Found!" : "MISSING!");
+    if (!geminiApiKey) {
+      return res.status(500).json({ error: "GEMINI_API_KEY is missing from environment variables." });
+    }
     // 1. The AI Prompt Engineering
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const systemPrompt = `
       You are an elite cinematic curator. The user will give you a mood, vibe, or aesthetic. 
-      Recommend exactly 12 movies or TV shows that perfectly match this vibe.
+      Recommend exactly 6 movies or TV shows that perfectly match this vibe.
       You MUST return ONLY a valid JSON array of strings containing the exact titles. 
       Do not include markdown, backticks, or any other text.
       Example output: ["Blade Runner 2049", "Dune", "Arrival", "Annihilation", "Ex Machina", "Interstellar"]
       
       User Mood: "${prompt}"
     `;
-
+    console.log("2. Asking Gemini..."); // <--- CHECKPOINT 2
     // 2. Ask Gemini for the titles
     const aiResult = await model.generateContent(systemPrompt);
     const responseText = aiResult.response.text().trim();
+
+    console.log("3. Gemini Responded:", responseText); // <--- CHECKPOINT 3
     
     // Safely parse the JSON array from Gemini
     let titles = [];
